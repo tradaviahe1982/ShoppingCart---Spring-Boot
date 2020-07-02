@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: shop
+Implementation-Version: 1.0
+Built-By: VIETANH
+Implementation-Vendor-Id: com.linkin
+Build-Jdk: 1.8.0_251
+Implementation-URL: http://maven.apache.org
+Created-By: Maven Integration for Eclipse
+

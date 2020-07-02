@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Giỏ Hàng'"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="row">
+			<div class="col-md-12">
+				<h3 class="title-5 m-b-35">Giỏ Hàng</h3>
+				<div class="table-responsive table-responsive-data2">
+					<table id="datatable" class="table table-data2">
+						<thead>
+							<tr>
+								<th></th>
+								<th>STT</th>
+								<th th:text="'Hình ảnh'"></th>
+								<th th:text="'Tên Sản Phẩm'"></th>
+								<th th:text="'Giá'"></th>
+								<th th:text="'Số Lượng'"></th>
+								<th th:text="'Thành Tiền'"></th>
+								<th th:text="#{text.option}"></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th colspan="1"><span><button id="confirm-delete-multi-button" class="text-danger" data-toggle="tooltip"
+											data-original-title="Xoá hết">
+											<i class="fa fa-trash"></i>
+										</button></span></th>
+								<td colspan="5"><span>Tổng tiền:</span></td>
+								<td colspan="2"><span class="text-success" id="total-cost"></span></td>
+							</tr>
+							<tr>
+								<td colspan="2"><span>Nhập % giảm giá:</span></td>
+								<td colspan="1"><span><input class="form-control number" type="text" value="0" id="discount" onkeyup="checkMoneyDiscount()"/></span></td>
+								<td colspan="1"></td>
+								<td colspan="2"><span>Số tiền đã giảm:</span></td>
+								<td colspan="1"><span class="text-success"><a id="moneyDiscount"></a></span></td>
+							</tr>
+							<tr>
+								<td colspan="4"><span></span></td>
+								<td colspan="2"><span>Số tiền cần thanh toán:</span></td>
+								<td colspan="1"><span class="text-success"><a id="totalNeedPay"></a></span></td>
+								<td colspan="1"><button id='order-button' data-toggle="modal" data-target="#add-order-modal" class="btn btn-info">Thanh Toán</button></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="order-sucess-modal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<div class="icon-tick-64-px no-rtl" style="background-image: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+								<g fill="none" fill-rule="evenodd" stroke="#97D653" stroke-width="2">
+								<path
+									d="M32 63c17.12 0 31-13.88 31-31C63 14.88 49.12 1 32 1c-2.708 0-5.369.347-7.938 1.025a30.757 30.757 0 0 0-4.329 1.496C8.458 8.385 1 19.507 1 32c0 17.12 13.88 31 31 31z"></path>
+								<path stroke-linecap="square" d="M21 34.96L29 42l13.6-20"></path></g></svg>
+						</div>
+						<p>Thanh Toán Thành Công</p>
+					</div>
+					<div class="modal-footer">
+						<a th:href="@{/staff/order/list}" class="btn btn-danger btn-ok" style="color: white;">Xem đơn hàng</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-order-modal" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Thanh Toán</h5>
+					</div>
+					<div class="modal-body">
+						<div class="modal-body">
+							<form class="form-horizontal" onsubmit="submitOrderForm();return false">
+								<div class="form-group row">
+									<label class="col-sm-3 form-label">Khách hàng</label>
+									<div class="col-sm-9">
+										<select class="form-control" id="customer-id">
+											<option value="">Vui lòng chọn khách hàng</option>
+											<option th:each="customer: ${customers}" th:value="${customer.id}" th:text="${customer.name}">
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-3 form-label">Shipper</label>
+									<div class="col-sm-9">
+										<select class="form-control" id="shipper-id">
+											<option value="">Vui lòng chọn shipper</option>
+											<option th:each="shipper: ${shippers}" th:value="${shipper.id}" th:text="${shipper.name}">
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<label class="col-sm-3 form-label">Ghi chú</label>
+									<div class="col-sm-9">
+										<textarea class="form-control" id="note"></textarea>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-sm-3"></div>
+									<div class="form-group col-sm-9">
+										<div>
+											<button type="submit" class="btn btn-primary waves-effect waves-light" th:text="'Thanh Toán'"></button>
+											<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="'Hủy'"></button>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header" th:text="'Bạn muốn xoá sản phẩm này khỏi đơn hàng?'"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete-multi" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header" th:text="'Bạn muốn xoá các sản phẩm khỏi đơn hàng?'"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<button class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="please-select-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">Vui lòng tích chọn các dòng để xoá?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.cancel}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" th:inline="javascript">
+		
+		
+            
+		var vietnameseUrl = [[@{/user/vendor/datatables/Vietnamese.json}]];
+		var url = [[@{/staff/cart-item/get-cart-item-session}]];
+	    var editUrl = [[@{/staff/cart-item/update}]];
+		var delUrl = [[@{/staff/cart-item/delete}]];
+	    var delMultiUrl = [[@{/staff/cart-item/delete-multi}]];
+	    var addOrderURL = [[@{/staff/order/add}]];
+	    var updateURL = [[@{/staff/cart-item/update}]];
+	    var csrf_token = [[${_csrf.token}]];
+	    var searchHolderText = 'Tìm theo tên sản phẩm';
+	    
+	    var id = "";
+	    var table;
+	    var total = 0;
+		$(document).ready(function() {
+			table = $('#datatable').DataTable( {
+				"processing": true,
+		        "serverSide": true,
+		        "ajax": {
+		        	type:"POST",
+		            url: url,
+		            dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: function (d) {
+		            	return JSON.stringify( d );
+		            }
+		        },
+		        "lengthMenu": [10, 25, 50, 100, 200],
+		        "columns": [
+		            { "data": "product.id" },
+		            { "data": "product.id" },
+		            { "data": "product.pathImage" },
+		            { "data": "product.name" },
+		            { "data": "unitPrice" },
+		            { "data": "quantity"},
+		            { "data": "unitPrice"},
+		            { "data": "id" }
+			        ],
+		        "order": [1, "desc"],
+		        "select": {
+		        	'style': 'multi'
+		        },
+		        "createdRow": function ( row, data, index ) {
+		            $(row).addClass('tr-shadow');
+		        },
+		        "bPaginate": false,
+		        "bFilter": false,
+		        "bInfo": false,
+		        "columnDefs": [
+				{
+				    'targets': 0,
+				    'checkboxes': {
+				       'selectRow': true
+				    }
+				 },
+				 {
+					"render": function ( data, type, row, meta ) {
+						return (meta.row + 1);
+	                 },
+	                "orderable": false,
+   	                "targets": 1
+   	             },
+				 {
+					"render": function ( data, type, row ) {
+				            return "<img src='/image/" + row.product.pathImage+ "' width='100' />";
+	                 },
+	                "orderable": false,
+   	                "targets": 2
+	   	         },
+	   	      	 {
+					"render": function ( data, type, row ) {
+				            return formatNumber(row.unitPrice);
+	                 },
+   	                "targets": 4
+	   	         },
+	   	      	{
+					"render": function ( data, type, row ) {
+				            return '<input class="form-control" onkeyup="updateQuantity(this)" type="text" value="'+row.quantity+'"/>';
+	                 },
+	                 "width":"5%",
+   	                "targets": 5
+	   	         },
+   	      		 {
+					"render": function ( data, type, row ) {
+				            return formatNumber(row.unitPrice * row.quantity);
+	                 },
+   	                "targets": 6
+	   	         },
+	   	      	 {
+                     "render": function (data, type, row) {
+                         return '<button id="decrease-quantity" class="m-r-10 btn btn-sm btn-outline-info"><i class="fas fa-arrow-down"></i></button>' +
+                             row.quantity + '<button id="increase-quantity" class="m-l-10 btn btn-sm btn-outline-info"><i class="fas fa-arrow-up"></i></button>';
+                     },
+                     "orderable": false,
+                     "targets": 6
+                 },
+				 {
+					"render": function ( data, type, row ) {
+						  var content = '<div class="table-data-feature"><button class="item" data-toggle="modal" data-target="#confirm-delete" data-name="' + encodeURI(row.product.name)+ '"><i class="zmdi zmdi-delete"></i></button> </div>'
+				       	  return content;
+	                 },
+	                "orderable": false,
+   	                "targets": 7
+   	              }
+		        ],
+		        "language": {
+		            "url": vietnameseUrl,
+		            "searchPlaceholder": searchHolderText
+		        },
+		        "initComplete": function(settings, json) {
+		        },
+		        "drawCallback": function(){
+		        	total = 0;
+		        	table.rows().every(function() {
+	        		  this.nodes().to$().after('<tr class="spacer"></tr>');
+	        		  var data = table.row($(this)).data();
+	        		  total += (data.quantity * data.unitPrice);
+	        		});
+		        	$("#total-cost").html(formatNumber(total));
+		        	
+		        	if (table.data().length == 0 ) {
+		        		$("#order-button").css("display","none");
+		        	}
+		        }
+	        });
+			
+			$('#datatable tbody').on( 'click', 'tr', function () {
+				var data = table.row($(this)).data();
+				id = data.product.id;
+		    });
+			
+			// Handle DELETE CART ITEM
+			//triggered when modal is about to be shown
+			$('#confirm-delete').on('show.bs.modal', function (e) {
+			    //get data-id attribute of the clicked element
+			    var productName = $(e.relatedTarget).data('name');
+			    //populate the textbox
+			    $(e.currentTarget).find('div.modal-body').html('<strong>' + decodeURI(productName) + '</strong>');
+			});
+			////////////////////////////////////////////////
+			$('#confirm-delete').on('click', '.btn-ok', function (e) {
+	              var $modalDiv = $(e.delegateTarget);
+	              $.get(delUrl + '/' + id).then(function () {
+	                  $modalDiv.modal('hide');
+	                  table.draw();
+	              });
+	          });
+			
+	       	// Handle DELETE ALL
+	          var rowIds = [];
+	          $('#confirm-delete-multi-button').on('click', function (e) {
+	              var rows_selected = table.column(0).checkboxes.selected();
+	              rowIds = [];
+	              // Iterate over all selected checkboxes
+	              $.each(rows_selected, function (index, rowId) {
+	                  // Create a hidden element
+	                  rowIds.push(rowId);
+	              });
+	              if (rows_selected.length === 0) {
+	                  $("#please-select-dialog").modal('show');
+	              } else {
+	                  $("#confirm-delete-multi").modal('show');
+	              }
+	          });
+	          
+	          $('#confirm-delete-multi').on('click', '.btn-ok', function (e) {
+	              var $modalDiv = $(e.delegateTarget);
+	              $.get(delMultiUrl + '/' + rowIds.toString()).then(function () {
+	                  $modalDiv.modal('hide');
+	                  table.draw();
+	              });
+	          });
+		});
+		var discount = 0;
+		function checkMoneyDiscount() {
+			parseNumber();
+           	discount = $("#discount").val();
+            var moneyDiscount = (total * discount/100);
+            var totalNeedPay = total - moneyDiscount;
+            $("#moneyDiscount").html(formatNumber(Math.round(moneyDiscount)));
+            $("#totalNeedPay").html(formatNumber(Math.round(totalNeedPay)));
+            
+        };
+	      
+		function submitOrderForm() {
+			var customerId = $("#add-order-modal #customer-id").val();
+			var shipperId = $("#add-order-modal #shipper-id").val();
+			var discount = $("#discount").val();
+			var note = $("#add-order-modal #note").val();
+			$.ajax({
+		        url : addOrderURL,
+		        type: 'POST',
+		        dataType: "json",
+	            contentType: "application/json",
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: JSON.stringify({"customerId":customerId,"shipperId":shipperId,"discount":discount,"note":note}),
+		        success: function(){
+		        		$('#add-order-modal').modal('hide');
+			        	$('#order-sucess-modal').modal('show');
+		  
+		        	table.draw();
+			    },
+		        error: function(){
+		        	alert("Loi xay ra");
+		        }
+		    });
+			return false;
+		}
+		
+		function updateQuantity(t) {
+			var quantity = $(t).val();
+			console.log(quantity);
+			if (quantity != '') {
+				$.ajax({
+			        url : updateURL,
+			        type: 'PUT',
+			        dataType: "text",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+			        data: "pId=" + id +"&quantity=" + quantity,
+			        success: function(){
+				    	table.draw();
+				    }
+			    });
+			}
+		}
+		
+	</script>
+	</div>
+</body>
+</html>

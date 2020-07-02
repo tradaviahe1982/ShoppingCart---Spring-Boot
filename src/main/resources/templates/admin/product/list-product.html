@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Danh Sách Sản Phẩm'"></title>
+</head>
+<body>
+	<script>
+      </script>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="row">
+			<div class="col-md-12">
+				<h3 class="title-5 m-b-35">Danh Sách Sản Phẩm</h3>
+				<div class="table-data__tool">
+					<div class="table-data__tool-left"></div>
+					<div class="table-data__tool-right">
+						<button class="au-btn au-btn-icon au-btn--green au-btn--small" data-toggle="modal" data-target="#add-product">
+							<i class="zmdi zmdi-plus"></i>Thêm mới
+						</button>
+					</div>
+				</div>
+				<div class="table-responsive table-responsive-data2">
+					<table id="datatable" class="table table-data2">
+						<thead>
+							<tr>
+								<th></th>
+								<th th:text="'ID'"></th>
+								<th th:text="'Hình ảnh'"></th>
+								<th th:text="'Tên Sản Phẩm'"></th>
+								<th th:text="'Giá Tiền'"></th>
+								<th th:text="'Ghi Chú'"></th>
+								<th th:text="'Danh Mục'"></th>
+								<th th:text="'Nhà Phân Phối'"></th>
+								<th th:text="#{text.option}"></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th><button id="delButt" class="text-danger" data-toggle="tooltip" data-original-title="Xoá hết">
+										<i class="fa fa-trash"></i>
+									</button></th>
+								<th th:text="'ID'"></th>
+								<th th:text="'Hình ảnh'"></th>
+								<th th:text="'Tên Sản Phẩm'"></th>
+								<th th:text="'Giá Tiền'"></th>
+								<th th:text="'Ghi Chú'"></th>
+								<th th:text="'Danh Mục'"></th>
+								<th th:text="'Nhà Phân Phối'"></th>
+								<th th:text="#{text.option}"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header" th:text="'Bạn muốn xoá Sản phẩm này?'"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete-multi" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header" th:text="'Bạn muốn xoá các sản phẩm này?'"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.no}"></button>
+						<button class="btn btn-danger btn-ok" style="color: white;" th:text="#{text.delete}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="please-select-dialog" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">Vui lòng tích chọn các dòng để xoá?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{text.cancel}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-product" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<span th:text="'Thêm Sản Phẩm'" th:remove="tag"></span>
+						</h5>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" enctype="multipart/form-data">
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Tên Sản Phẩm'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Tên Sản Phẩm'" name="name" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Giá Tiền'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Giá Tiền'" name="unitPrice" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ảnh'"></label>
+								<div class="col-sm-9">
+									<input type="file" class="form-control" id="imageFile" name="imageFile" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ghi Chú'"></label>
+								<div class="col-sm-9">
+									<textarea class="form-control" th:placeholder="'Ghi Chú'" name="note" /></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Danh Mục'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" name="categoryId">
+										<option value="">Tất cả</option>
+										<option th:each="category: ${categories}" th:value="${category.id}" th:text="${category.name}">
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Nhà Phân Phối'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" name="supplierId">
+										<option value="">Tất cả</option>
+										<option th:each="supplier: ${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}">
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3"></div>
+								<div class="form-group col-sm-9">
+									<div>
+										<button id="addButton" type="submit" style="width: 60%;" class="btn btn-primary waves-effect waves-light" th:text="#{text.add}"></button>
+										<button type="reset" class="btn btn-warning waves-effect waves-light" th:text="#{text.reset}"></button>
+										<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="update-product" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<span th:text="'Cập nhật Sản Phẩm'" th:remove="tag"></span>
+						</h5>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" enctype="multipart/form-data">
+							<div class="form-group row">
+								<label class="col-sm-3 form-label">ID</label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" readonly="readonly" name="id" id="id" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Tên Sản Phẩm'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Tên Sản Phẩm'" id="name" name="name" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Giá Tiền'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Giá Tiền'" id="unitPrice" name="unitPrice" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ảnh'"></label>
+								<div class="col-sm-9">
+									<input type="file" class="form-control" id="imageFile" name="imageFile" /> <img id="pathImage" width="100">
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ghi Chú'"></label>
+								<div class="col-sm-9">
+									<textarea class="form-control" th:placeholder="'Ghi Chú'" id="note" name="note" /></textarea>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Danh Mục'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" id="categoryId" name="categoryId">
+										<option value="">Tất cả</option>
+										<option th:each="category: ${categories}" th:value="${category.id}" th:text="${category.name}">
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Nhà Phân Phối'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" id="supplierId" name="supplierId">
+										<option value="">Tất cả</option>
+										<option th:each="supplier: ${suppliers}" th:value="${supplier.id}" th:text="${supplier.name}">
+									</select>
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="col-sm-3"></div>
+								<div class="form-group col-sm-9">
+									<div>
+										<button id="addButton" type="submit" style="width: 50%;" class="btn btn-primary waves-effect waves-light" th:text="#{text.update}"></button>
+										<button type="reset" class="btn btn-warning waves-effect waves-light" th:text="#{text.reset}"></button>
+										<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-add-to-cart" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">Thêm Vào Giỏ Hàng</h5>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal">
+							<div class="form-group row" id="product-info">
+								
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-12 form-label">Số lượng mua</label>
+								<div class="col-sm-12">
+									<input required="required" value="1" class="form-control" type="number" placeholder="Số lượng mua" id="quantity" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<div class="form-group col-sm-12">
+									<button type="submit" class="btn btn-primary waves-effect waves-light">Thêm vào giỏ hàng</button>
+									<button type="button" class="btn btn-danger waves-effect waves-light" data-dismiss="modal" th:text="#{text.cancel}"></button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-to-cart-success" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<div class="icon-tick-64-px no-rtl" style="background-image: none;">
+							<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+								<g fill="none" fill-rule="evenodd" stroke="#97D653" stroke-width="2">
+								<path
+									d="M32 63c17.12 0 31-13.88 31-31C63 14.88 49.12 1 32 1c-2.708 0-5.369.347-7.938 1.025a30.757 30.757 0 0 0-4.329 1.496C8.458 8.385 1 19.507 1 32c0 17.12 13.88 31 31 31z"></path>
+								<path stroke-linecap="square" d="M21 34.96L29 42l13.6-20"></path></g></svg>
+						</div>
+						<p>Sản phẩm đã được thêm vào giỏ hàng.</p>
+						<a class="btn btn-default btn-block" th:href="@{/staff/cart-item/list}">XEM GIỎ HÀNG</a> <a href="#" data-dismiss="modal" class="btn btn-link addtocart-continue-shopping js-continue-modal">Tiếp
+							tục mua hàng</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" th:inline="javascript">
+		var vietnameseUrl = [[@{/user/vendor/datatables/Vietnamese.json}]];
+		var url = [[@{/admin/product/list}]];
+	    var addURL = [[@{/admin/product/add}]];
+	    var editUrl = [[@{/admin/product/update}]];
+		var delUrl = [[@{/admin/product/delete}]];
+	    var delMultiUrl = [[@{/admin/product/delete-multi}]];
+	    var addcartItemUrl = [[@{/staff/cart-item/add-to-order}]];
+	    var csrf_token = [[${_csrf.token}]];
+	    var searchHolderText = 'Tìm theo tên sản phẩm';
+	    
+	    var id = "";
+	    var table;
+		$(document).ready(function() {
+			table = $('#datatable').DataTable( {
+				"processing": true,
+		        "serverSide": true,
+		        "ajax": {
+		        	type:"POST",
+		            url: url,
+		            dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: function (d) {
+		            	return JSON.stringify( d );
+		            }
+		        },
+		        "lengthMenu": [10, 25, 50, 100, 200],
+		        "columns": [
+		            { "data": "id" },
+		            { "data": "id" },
+		            { "data": "pathImage" },
+		            { "data": "name" },
+		            { "data": "unitPrice" },
+		            { "data": "note" },
+		            { "data": "categoryName" },
+		            { "data": "supplierName" },
+		            { "data": "id" }
+			        ],
+		        "order": [2, "desc"],
+		        "select": {
+		        	'style': 'multi'
+		        },
+		        "createdRow": function ( row, data, index ) {
+		            $(row).addClass('tr-shadow');
+		        },
+		        "columnDefs": [
+				{
+				    'targets': 0,
+				    'checkboxes': {
+				       'selectRow': true
+				    }
+				 },
+				 {
+					"render": function ( data, type, row ) {
+				            return "<img src='/image/" + row.pathImage+ "' width='100' />";
+	                 },
+	                "orderable": false,
+   	                "targets": 2
+	   	         },
+				 {
+					"render": function ( data, type, row ) {
+				            return formatNumber(row.unitPrice);
+	                 },
+   	                "targets": 4
+	   	         },
+				 
+				 {
+					"render": function ( data, type, row ) {
+						 var content = '<div class="table-data-feature"> <button class="item"  data-toggle="modal" data-target="#update-product" data-json="' + encodeURI(JSON.stringify(row)) +'"><i class="zmdi zmdi-edit" ></i></button>'
+		                    +'<button class="item" data-toggle="modal" data-target="#confirm-delete" data-json="' + encodeURI(JSON.stringify(row)) +'"><i class="zmdi zmdi-delete"></i></button>'
+		                    +'<button class="item" data-toggle="modal" data-target="#confirm-add-to-cart" data-json="' + encodeURI(JSON.stringify(row)) +'"><i class="zmdi zmdi-shopping-cart-add"></i></button></div>'
+				            return content;
+	                 },
+	                "orderable": false,
+   	                "targets": 8
+   	            }
+		        ],
+		        "language": {
+		            "url": vietnameseUrl,
+		            "searchPlaceholder": searchHolderText
+		        },
+		        "initComplete": function(settings, json) {
+		        },
+		        "drawCallback": function(){
+		        	table.rows().every(function() {
+	        		  this.nodes().to$().after('<tr class="spacer"></tr>')
+	        		})
+		        }
+	        });
+			
+			$('#datatable tbody').on( 'click', 'tr', function () {
+				var data = table.row($(this)).data();
+				id = data.id;
+		    });
+			
+			//triggered when modal is about to be shown
+			$('#update-product').on('show.bs.modal', function(e) {
+				//get data-id attribute of the clicked element
+				var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+				 
+				 //populate the textbox
+			  	$("#update-product #name").val(row.name);
+			    $("#update-product #unitPrice").val(row.unitPrice);
+			    $("#update-product #note").val(row.note);
+			    $("#update-product #categoryId").val(row.categoryId);
+			    $("#update-product #supplierId").val(row.supplierId);
+			    $("#update-product #id").val(row.id);
+			   
+			});
+			
+			//triggered when modal is about to be shown
+			$('#confirm-delete').on('show.bs.modal', function(e) {
+				var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			    //populate the textbox
+			    $(e.currentTarget).find('div.modal-body').html('<strong>' + row.name  + '</strong>');
+			});
+			
+			$('#confirm-delete').on('click', '.btn-ok', function(e) {
+			  	var $modalDiv = $(e.delegateTarget);
+				  $.get(delUrl + '/' + id).then(function() {
+				     $modalDiv.modal('hide');
+				     table.draw();
+				  }, function() {
+					  $modalDiv.find('div.modal-body').html('<b>Sản phẩm đang sử dụng!</b>');
+				  });
+			});
+			// Handle form submission event
+			var rowIds = [];
+			$('#delButt').on('click', function(e){
+			    var rows_selected = table.column(0).checkboxes.selected();
+			    rowIds = [];
+			    // Iterate over all selected checkboxes
+			    $.each(rows_selected, function(index, rowId){
+			       // Create a hidden element
+			       rowIds.push(rowId);
+			    });
+			    if (rows_selected.length == 0) {
+			    	$("#please-select-dialog").modal('show');
+			    } else {
+			    	$("#confirm-delete-multi").modal('show');
+			    }
+		 	});
+			
+			$('#confirm-delete-multi').on('click', '.btn-ok', function(e) {
+			  var $modalDiv = $(e.delegateTarget);
+			  $.get(delMultiUrl + '/' + rowIds.toString()).then(function() {
+				  $modalDiv.modal('hide');
+				  table.draw();
+		      });
+			})	
+			
+			///handle submit form on dialog
+			$("#add-product form").submit(function(e) {
+				e.preventDefault();
+				var formData = new FormData(this);
+				$.ajax({
+			        url : addURL,
+			        type: 'POST',
+			        dataType: "text",
+			        cache: false,
+			        contentType: false,
+			        processData: false,
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+			        data: formData,
+			        success: function(){
+			        	$("#add-product form")[0].reset();
+			        	$('#add-product').modal('hide');
+				    	table.draw();
+				    },
+			        error: function(){
+			        	alert("Loi xay ra");
+			        }
+			    });
+			});
+		
+			$("#update-product form").submit(function(e) {
+				e.preventDefault();
+				var formData = new FormData(this);
+				$.ajax({
+			        url : editUrl,
+			        type: 'POST',
+			        dataType: "text",
+			        cache: false,
+			        contentType: false,
+			        processData: false,
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+			        data: formData,
+			        success: function(){
+			        	$("#update-product form")[0].reset();
+			        	$('#update-product').modal('hide');
+				    	table.draw();
+				    },
+			        error: function(){
+			        	alert("Loi xay ra");
+			        }
+			    });
+			});
+			
+			//add to cart
+			//triggered when modal is about to be shown
+			$('#confirm-add-to-cart').on('show.bs.modal', function(e) {
+				var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			    //populate the textbox
+			  	
+				var str  = '<div class="col-sm-3"><img src="/image/'+ row.pathImage +'" /></div>';
+				str += '<div class="col-sm-9"><div class="row">' + row.name + '</div><div class="row"><span class="text-danger">' + formatNumber(row.unitPrice) + ' đ</span></div></div>';
+				$('#product-info').html(str);
+			});
+			
+	 		$('#confirm-add-to-cart form').submit(function(e) {
+				e.preventDefault();
+	 			var quantity = $('#quantity').val();
+				$.ajax({
+			        url : addcartItemUrl + '?pId=' + id + '&quantity=' + quantity,
+			        type: 'PUT',
+			        dataType: "text",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+			        data: null,
+			        success: function(){
+			        	$('#confirm-add-to-cart').modal('hide');
+						$('#add-to-cart-success').modal('show');
+						$('#quantity').val(1);
+				    }
+			    });
+			});
+		});
+	</script>
+	</div>
+</body>
+</html>

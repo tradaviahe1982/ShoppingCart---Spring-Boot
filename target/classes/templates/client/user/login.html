@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="client/common/template">
+<head>
+<title th:text="#{text.login}"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="page-wrapper">
+			<div class="page-content--bge5">
+				<div class="container">
+					<div class="login-wrap">
+						<div class="login-content">
+							<div class="login-logo">
+								<a href="/"> <img th:src="@{/user/images/icon/logo.png}">
+								</a>
+							</div>
+							<div class="login-form">
+								<form th:action="@{/dang-nhap}" method="post">
+									<div class="form-group text-danger" th:text="${msg}"></div>
+									<div class="form-group">
+										<label>Tên đăng nhập</label> <input class="au-input au-input--full" type="text" name="username" required="required" placeholder="Username">
+									</div>
+									<div class="form-group">
+										<label>Mật khẩu</label> <input class="au-input au-input--full" type="password" name="password" required="required" placeholder="Password">
+									</div>
+									<div class="login-checkbox">
+										<label> <input type="checkbox" name="remember-me">Lưu mật khẩu
+										<!--</label> <label> <a href="#">Forgotten Password?</a>-->
+										</label>
+									</div>
+									<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+									<button class="au-btn au-btn--block au-btn--green m-b-20" type="submit">Đăng nhập</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport" />
+<title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">QUẢN LÝ BÁN HÀNG ONLINE</title>
+<meta content="vnptit.vn" name="Nguyễn Việt Anh" />
+<link rel="shortcut icon" th:href="@{/user/images/icon/logo.png}" type="image/png" />
+<!-- Fontfaces CSS-->
+<link th:href="@{/user/css/font-face.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/font-awesome-4.7/css/font-awesome.min.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/font-awesome-5/css/fontawesome-all.min.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/mdi-font/css/material-design-iconic-font.min.css}" rel="stylesheet" media="all">
+<!-- Bootstrap CSS-->
+<link th:href="@{/user/vendor/bootstrap-4.1/bootstrap.min.css}" rel="stylesheet" media="all">
+<!-- Vendor CSS-->
+<link th:href="@{/user/vendor/animsition/animsition.min.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/wow/animate.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/css-hamburgers/hamburgers.min.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/slick/slick.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/select2/select2.min.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/perfect-scrollbar/perfect-scrollbar.css}" rel="stylesheet" media="all">
+<link th:href="@{/user/vendor/datatables/dataTables.bootstrap4.min.css}" rel="stylesheet" media="all" />
+<link th:href="@{/user/vendor/datatables/dataTables.checkboxes.css}" rel="stylesheet" media="all" />
+<link th:href="@{/user/css/jquery.datetimepicker.css}" rel="stylesheet" media="all">
+<!-- Main CSS-->
+<link th:href="@{/user/css/theme.css}" rel="stylesheet" media="all">
+<!-- Jquery JS-->
+<script th:src="@{/user/vendor/jquery-3.2.1.min.js}"></script>
+</head>
+<body >
+	<div class="page-wrapper">
+		<div th:replace="admin/common/header::header"></div>
+		<div class="page-content--bgf7">
+			<!-- DATA TABLE-->
+			<section class="p-t-20">
+				<div class="container">
+					<div layout:fragment="content">empty</div>
+				</div>
+			</section>
+			<div th:replace="admin/common/footer::footer"></div>
+		</div>
+	</div>
+	<!-- Bootstrap JS-->
+	<script th:src="@{/user/vendor/bootstrap-4.1/popper.min.js}"></script>
+	<script th:src="@{/user/vendor/bootstrap-4.1/bootstrap.min.js}"></script>
+	<!-- Vendor JS -->
+	<script th:src="@{/user/vendor/slick/slick.min.js}">
+		
+	</script>
+	<script th:src="@{/user/vendor/wow/wow.min.js}"></script>
+	<script th:src="@{/user/vendor/animsition/animsition.min.js}"></script>
+	<script th:src="@{/user/vendor/bootstrap-progressbar/bootstrap-progressbar.min.js}">
+		
+	</script>
+	<script th:src="@{/user/vendor/circle-progress/circle-progress.min.js}"></script>
+	<script th:src="@{/user/vendor/perfect-scrollbar/perfect-scrollbar.js}"></script>
+	<script th:src="@{/user/vendor/select2/select2.min.js}"></script>
+	<script th:src="@{/user/js/jquery.datetimepicker.full.js}"></script>
+	<script th:src="@{/user/vendor/datatables/jquery.dataTables.min.js}"></script>
+	<script th:src="@{/user/vendor/datatables/dataTables.bootstrap4.min.js}"></script>
+	<script th:src="@{/user/vendor/datatables/dataTables.checkboxes.min.js}"></script>
+	<script th:src="@{/user/js/main.js}"></script>
+	<script>
+		$.datetimepicker.setLocale('vi');
+		$(function() {
+			$('input.number').keyup(function(event) {
+
+				// skip for arrow keys
+				if (event.which >= 37 && event.which <= 40)
+					return;
+
+				// format number
+				$(this).val(function(index, value) {
+					return formatNumber(value);
+				});
+			});
+			$('input.number').each(function(index, value) {
+				$(this).val(function(index, value) {
+					return formatNumber(value);
+				});
+			});
+		});
+		function formatNumber(value) {
+			return String(value).replace(/\D/g, "").replace(
+					/\B(?=(\d{3})+(?!\d))/g, ".");
+		}
+		function getOnlyDigit(value) {
+			return String(value).replace(/[^0-9]/g, "");
+		}
+		function parseNumber() {
+			$('input.number').each(function(index, value) {
+				$(this).val(function(index, value) {
+					return getOnlyDigit(value);
+				});
+			});
+			return true;
+		}
+	</script>
+</body>
+</html>

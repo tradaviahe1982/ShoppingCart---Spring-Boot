@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="admin/common/template">
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Người giao hàng'"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<script>
+			$(function(){
+				$("#add-shipper #birthDay").datetimepicker({ format : 'd/m/Y', timepicker:false });
+				$("#update-shipper #birthDay").datetimepicker({ format : 'd/m/Y', timepicker:false });
+			});
+		</script>
+		<div class="row">
+			<div class="col-md-12">
+				<h3 class="title-5 m-b-35">Danh Sách Người Giao Hàng</h3>
+				<div class="table-data__tool">
+					<div class="table-data__tool-left"></div>
+					<div class="table-data__tool-right">
+						<button class="au-btn au-btn-icon au-btn--green au-btn--small"
+							data-toggle="modal" data-target="#add-shipper">
+							<i class="zmdi zmdi-plus"></i>Thêm mới
+						</button>
+					</div>
+				</div>
+				<div class="table-responsive table-responsive-data2">
+					<table id="datatable" class="table table-data2">
+						<thead>
+							<tr>
+								<th></th>
+								<th th:text="'ID'"></th>
+								<th th:text="'Tên Người Giao Hàng'"></th>
+								<th th:text="'Địa Chỉ'"></th>
+								<th th:text="'Số Điện Thoại'"></th>
+								<th th:text="'Ngày Sinh'"></th>
+								<th th:text="'Ghi Chú'"></th>
+								<th th:text="'Ảnh'"></th>
+								<th th:text="#{text.option}"></th>
+							</tr>
+						</thead>
+						<tfoot>
+							<tr>
+								<th><button id="delButt" class="text-danger"
+										data-toggle="tooltip" data-original-title="Xoá hết">
+										<i class="fa fa-trash"></i>
+									</button></th>
+								<th th:text="'ID'"></th>
+								<th th:text="'Tên Người Giao Hàng'"></th>
+								<th th:text="'Địa Chỉ'"></th>
+								<th th:text="'Số Điện Thoại'"></th>
+								<th th:text="'Ngày Sinh'"></th>
+								<th th:text="'Ghi Chú'"></th>
+								<th th:text="'Ảnh'"></th>
+								<th th:text="#{text.option}"></th>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="modal fade" id="confirm-delete" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header"
+						th:text="'Bạn muốn xoá người giao hàng này?'"></div>
+					<div class="modal-body"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							th:text="#{text.no}"></button>
+						<a class="btn btn-danger btn-ok" style="color: white;"
+							th:text="#{text.delete}"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="confirm-delete-multi" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header"
+						th:text="'Bạn muốn xóa những người giao hàng này?'"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							th:text="#{text.no}"></button>
+						<button class="btn btn-danger btn-ok" style="color: white;"
+							th:text="#{text.delete}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="please-select-dialog" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-body">Vui lòng tích chọn các dòng để xoá?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"
+							th:text="#{text.cancel}"></button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="add-shipper" tabindex="-1" role="dialog"
+			aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<span th:text="'Thêm Người Giao Hàng'" th:remove="tag"></span>
+						</h5>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" enctype="multipart/form-data">
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Tên'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text"
+										th:placeholder="'Tên'" name="name" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Địa Chỉ'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text"
+										th:placeholder="'Địa Chỉ'" name="address" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Số Điện Thoại'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text"
+										th:placeholder="'Số Điện Thoại'" name="phone" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ghi Chú'"></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text"
+										th:placeholder="'Ghi Chú'" name="note" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ngày Sinh'"></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text"
+										th:placeholder="'Ngày Sinh'" id="birthDay" name="birthDay" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ảnh'"></label>
+								<div class="col-sm-9">
+									<input type="file" class="form-control" id="imageFile"
+										name="imageFile" />
+								</div>
+							</div>
+							<!-- <div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Trạng Thái'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" id="status" name="status">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>
+								</div>
+							</div> -->
+							<div class="form-group row">
+								<div class="col-sm-3"></div>
+								<div class="form-group col-sm-9">
+									<div>
+										<button id="addButton" type="submit" style="width: 60%;"
+											class="btn btn-primary waves-effect waves-light"
+											th:text="#{text.add}"></button>
+										<button type="reset"
+											class="btn btn-warning waves-effect waves-light"
+											th:text="#{text.reset}"></button>
+										<button type="button"
+											class="btn btn-danger waves-effect waves-light"
+											data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal fade" id="update-shipper" tabindex="-1"
+			role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">
+							<span th:text="'Cập nhật người giao hàng'" th:remove="tag"></span>
+						</h5>
+					</div>
+					<div class="modal-body">
+						<form class="form-horizontal" enctype="multipart/form-data">
+							<div class="form-group row">
+								<label class="col-sm-3 form-label">ID</label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text" readonly="readonly"
+										name="id" id="id" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Tên'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text" th:placeholder="'Tên'"
+										id="name" name="name" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Địa Chỉ'"></label>
+								<div class="col-sm-9">
+									<input required="required" class="form-control" type="text"
+										th:placeholder="'Địa Chỉ'" id="address" name="address" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Số Điện Thoại'"></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text"
+										th:placeholder="'Số Điện Thoại'" id="phone" name="phone" required="required" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ghi Chú'"></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text"
+										th:placeholder="'Ghi Chú'" id="note" name="note" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ngày Sinh'"></label>
+								<div class="col-sm-9">
+									<input class="form-control" type="text"
+										th:placeholder="'Ngày Sinh'" id="birthDay" name="birthDay" />
+								</div>
+							</div>
+							<div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Ảnh'"></label>
+								<div class="col-sm-9">
+									<input type="file" class="form-control" id="imageFile"
+										name="imageFile" />
+								</div>
+							</div>
+							<!-- <div class="form-group row">
+								<label class="col-sm-3 form-label" th:text="'Trạng Thái'"></label>
+								<div class="col-sm-9">
+									<select class="form-control" name="status">
+										<option value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>
+								</div>
+							</div> -->
+							<div class="form-group row">
+								<div class="col-sm-3"></div>
+								<div class="form-group col-sm-9">
+									<div>
+										<button id="addButton" type="submit" style="width: 60%;"
+											class="btn btn-primary waves-effect waves-light"
+											th:text="#{text.update}"></button>
+										<button type="reset"
+											class="btn btn-warning waves-effect waves-light"
+											th:text="#{text.reset}"></button>
+										<button type="button"
+											class="btn btn-danger waves-effect waves-light"
+											data-dismiss="modal" th:text="#{text.cancel}"></button>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" th:inline="javascript">
+		var vietnameseUrl = [[@{/user/vendor/datatables/Vietnamese.json}]];
+	    var url = [[@{/staff/shipper/list}]];
+	    var addURL = [[@{/staff/shipper/add}]];
+	    var editUrl = [[@{/staff/shipper/update}]];
+	    var delUrl = [[@{/staff/shipper/delete}]];
+	    var delMultiUrl = [[@{/staff/shipper/delete-multi}]];
+	    var csrf_token = [[${_csrf.token}]];
+	    var searchHolderText = 'Tìm theo tên';
+	    
+	    var id = "";
+	    var table;
+		$(document).ready(function() {
+			table = $('#datatable').DataTable( {
+				"processing": true,
+		        "serverSide": true,
+		        "ajax": {
+		        	type:"POST",
+		            url: url,
+		            dataType: "json",
+		            contentType: "application/json",
+		            headers: {'X-CSRF-TOKEN': csrf_token},
+		            data: function (d) {
+		            	return JSON.stringify( d );
+		            }
+		        },
+		        "lengthMenu": [10, 25, 50, 100, 200],
+		        "columns": [
+		            { "data": "id" },
+		            { "data": "id" },
+		            { "data": "name" },
+		            { "data": "address" },
+		            { "data": "phone" },
+		            { "data": "birthDay" },
+		            { "data": "note" },
+		            { "data": "pathImage" },
+		            { "data": "id" }
+		        ],
+		        "order": [1, "desc"],
+		        "select": {
+		        	'style': 'multi'
+		        },
+		        "columnDefs": [
+				{
+				    'targets': 0,
+				    'checkboxes': {
+				       'selectRow': true
+				    }
+				 },
+				 {
+						"render": function ( data, type, row ) {
+					            return "<img src='/image/" + row.pathImage+ "' width='100' />";
+		                 },
+		                "orderable": false,
+	   	                "targets": 7
+		   	         },
+				 {
+					"render": function ( data, type, row ) {
+						 var content = '<div class="table-data-feature"> <button class="item" data-placement="top" data-toggle="modal" data-target="#update-shipper" data-json="' + encodeURI(JSON.stringify(row)) +'"><i class="zmdi zmdi-edit"></i></button>'
+						 +'<button class="item" data-placement="top" data-toggle="modal" data-target="#confirm-delete" data-json="' + encodeURI(JSON.stringify(row)) +'"><i class="zmdi zmdi-delete"></i></button></div>';
+				         return content;
+	                 },
+	                "orderable": false,
+   	                "targets": 8
+   	            }
+		        ],
+		        "language": {
+		            "url": vietnameseUrl,
+		            "searchPlaceholder": searchHolderText
+		        },
+		        "initComplete": function(settings, json) {
+		        },
+	        });
+			
+			$('#datatable tbody').on( 'click', 'tr', function () {
+				var data = table.row($(this)).data();
+				id = data.id;
+		    });
+			
+			$('#datatable tbody').on('click', 'td.details-control', function () {
+		        var tr = $(this).closest('tr');
+		        var row = table.row( tr );
+		 
+		        if ( row.child.isShown() ) {
+		            row.child.hide();
+		            tr.removeClass('shown');
+		        }
+		        else {
+		            // Open this row
+		            row.child(format(row.data())).show();
+		            tr.addClass('shown');
+		        }
+		    } );
+			
+			$('#confirm-delete').on('click', '.btn-ok', function(e) {
+			  	var $modalDiv = $(e.delegateTarget);
+				  $.get(delUrl + '/' + id).then(function() {
+				     $modalDiv.modal('hide');
+				     table.draw();
+				  }, function() {
+					  $modalDiv.find('div.modal-body').html('<b>Thành viên đang sử dụng!</b>');
+				  });
+			});
+			function check() {
+				  document.getElementById("feature").checked = true;
+				}
+
+				function uncheck() {
+				  document.getElementById("feature").checked = false;
+				}
+			//triggered when modal is about to be shown
+			$('#update-shipper').on('show.bs.modal', function(e) {
+			    var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			  
+			    //populate the textbox
+			    $("#update-shipper #name").val(row.name);
+			    $("#update-shipper #address").val(row.address);
+			    $("#update-shipper #phone").val(row.phone);
+			    $("#update-shipper #note").val(row.note);
+			    $("#update-shipper #birthDay").val(row.birthDay);
+			    $("#update-shipper #status").val(row.status);
+			    $("#update-shipper #id").val(row.id);
+			
+			});
+			//triggered when modal is about to be shown
+			$('#confirm-delete').on('show.bs.modal', function(e) {
+			    //get data-id attribute of the clicked element
+				var jsonStr = $(e.relatedTarget).data('json');
+			  	var row = JSON.parse(decodeURI(jsonStr));
+			    //populate the textbox
+			    $(e.currentTarget).find('div.modal-body').html('<strong>' + row.name  + '</strong>');
+			});
+			// Handle form submission event
+			var rowIds = [];
+			$('#delButt').on('click', function(e){
+			    var rows_selected = table.column(0).checkboxes.selected();
+			    rowIds = [];
+			    // Iterate over all selected checkboxes
+			    $.each(rows_selected, function(index, rowId){
+			       // Create a hidden element
+			       rowIds.push(rowId);
+			    });
+			    if (rows_selected.length == 0) {
+			    	$("#please-select-dialog").modal('show');
+			    } else {
+			    	$("#confirm-delete-multi").modal('show');
+			    }
+		 	});
+			$('#confirm-delete-multi').on('click', '.btn-ok', function(e) {
+				var $modalDiv = $(e.delegateTarget);
+				$.get(delMultiUrl + '/' + rowIds.toString()).then(function() {
+					 $modalDiv.modal('hide');
+					 table.draw();
+			    });
+			});
+		});
+		
+		$("#add-shipper form").submit(function(e) {
+			e.preventDefault();
+			var formData = new FormData(this);
+			$.ajax({
+		        url : addURL,
+		        type: 'POST',
+		        dataType: "text",
+		        cache: false,
+		        contentType: false,
+		        processData: false,
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: formData,
+		        success: function(){
+		        	console.log(123)
+		        	$("#add-shipper form")[0].reset();
+		        	$('#add-shipper').modal('hide');
+			    	table.draw();
+			    },
+		        error: function(){
+		        	alert("Loi xay ra");
+		        }
+		    });
+		});
+		
+		$("#update-shipper form").submit(function(e) {
+			e.preventDefault();
+			var formData = new FormData(this);
+			$.ajax({
+		        url : editUrl,
+		        type: 'POST',
+		        dataType: "text",
+		        cache: false,
+		        contentType: false,
+		        processData: false,
+	            headers: {'X-CSRF-TOKEN': csrf_token},
+		        data: formData,
+		        success: function(){
+		        	$("#update-shipper form")[0].reset();
+		        	$('#update-shipper').modal('hide');
+			    	table.draw();
+			    },
+		        error: function(){
+		        	alert("Loi xay ra");
+		        }
+		    });
+		});
+	</script>
+	</div>
+</body>
+</html>

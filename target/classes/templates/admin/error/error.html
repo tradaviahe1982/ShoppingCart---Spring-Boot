@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="client/common/template">
+<head>
+<meta charset="UTF-8" />
+<title th:text="'Xảy ra lỗi!'"></title>
+</head>
+<body>
+	<div layout:fragment="content" th:remove="tag">
+		<div class="box bg-sign-in padding ">
+			<div class="sign-in" style="width: 50%">
+				<div class="si-content">
+					<div class="media">
+						<div class="media-body pad">
+							<h4 class="media-heading text-success text-bold" th:text="#{msg}"></h4>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
