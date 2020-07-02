@@ -109,6 +109,9 @@ public class CartItemDaoImpl implements CartItemDao {
 
 		TypedQuery<Long> typedQuery = entityManager.createQuery(criteriaQuery.select(criteriaBuilder.count(root)));
 		return typedQuery.getSingleResult();
+		
+		
+		
 	}
 
 }
